@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { View, ScrollView, Text, TextInput, TouchableOpacity} from "react-native"
+import { View, ScrollView, Text, TextInput, TouchableOpacity, Alert} from "react-native"
 import {Feather} from "@expo/vector-icons"
 import colors from "tailwindcss/colors"
 
 import { BackButton } from "../components/BackButton";
 import { CheckBox } from "../components/CheckBox";
+import { api } from "../lib/axios";
 
 const avaiableWeekDays = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado']
 
 export function New(){
+
+    const [title, setTitle] = useState('')
 
     const [weekDays, setWeekDays] = useState<number[]>([])
 
@@ -18,6 +21,24 @@ export function New(){
         } else {
             setWeekDays(prevState => [...prevState, weekDayIndex])
         }
+    }
+
+    async function handleCreateNewHabit() {
+        try {
+            if(!title.trim() || weekDays.length === 0) {
+                Alert.alert('Novo Hábito', 'Informe o nome do hábito e escolha a periodicidade')
+            }
+
+            await api.post('/habits', { title, weekDays });
+
+            setTitle('');
+            setWeekDays([]);
+
+            Alert.alert('Novo hábito', 'Hábito criado com sucesso!')
+        } catch (error) {
+            console.log(error);
+            Alert.alert ('Ops', 'Não foi possivel criar o novo hábito');    
+        } 
     }
 
     return(
@@ -31,17 +52,19 @@ export function New(){
                     Criar hábito
                 </Text>
 
-                <Text className="mt-6 text-white font-semibold text-base">
+                <Text className="mt-6 text-white font-bold text-base">
                     Qual o seu comprometimento?
                 </Text>
 
                 <TextInput 
-                className="h-12 pl-4 rounded-lg mt-3 bg-zinc-900 text-white border-2 border-zinc-800 focus:border-green-600"
-                placeholder="Exercícios, dormir bem, etc"
-                placeholderTextColor={colors.zinc[400]}
+                className= "h-12 pl-4 rounded-lg mt-3 bg-zinc-900 text-white border-2 border-zinc-800 focus:border-green-600"
+                placeholder= "Exercícios, dormir bem, etc"
+                placeholderTextColor= {colors.zinc[400]}
+                onChangeText= {setTitle}
+                value={ title}
                 />
 
-                <Text className="font-semibold mt-4 mb-3 text-white text-base">
+                <Text className="font-bold mt-4 mb-3 text-white text-base">
                     Qual a recorrência?
                 </Text>
 
@@ -59,13 +82,14 @@ export function New(){
                 <TouchableOpacity 
                 className="w-full h-14 flex-row items-center justify-center bg-green-600 rounded-md mt-6"
                 activeOpacity={0.7}
+                onPress={handleCreateNewHabit}
                 >
                     <Feather 
                     name="check"
                     size={20}
                     color={colors.white}
                     />
-                    <Text className="font-semibold text-base text-white ml-2">
+                    <Text className="font-bold text-base text-white ml-2">
                         Confirmar
                     </Text>
                 </TouchableOpacity>
