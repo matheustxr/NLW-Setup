@@ -26,7 +26,7 @@ export function New(){
     async function handleCreateNewHabit() {
         try {
             if(!title.trim() || weekDays.length === 0) {
-                Alert.alert('Novo Hábito', 'Informe o nome do hábito e escolha a periodicidade')
+                return Alert.alert('Novo Hábito', 'Informe o nome do hábito e escolha a periodicidade')
             }
 
             await api.post('/habits', { title, weekDays });
@@ -61,7 +61,7 @@ export function New(){
                 placeholder= "Exercícios, dormir bem, etc"
                 placeholderTextColor= {colors.zinc[400]}
                 onChangeText= {setTitle}
-                value={ title}
+                value= {title}
                 />
 
                 <Text className="font-bold mt-4 mb-3 text-white text-base">

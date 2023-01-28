@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { Text, View, ScrollView, Alert } from 'react-native';
-import {useNavigation} from "@react-navigation/native"
+import {useNavigation, useFocusEffect} from "@react-navigation/native"
 import dayjs from 'dayjs';
 
 import {api} from '../lib/axios'
@@ -16,12 +16,12 @@ const datesFromYearStart = generateDatesFromYearBeginning()
 const minimumSummaryDatesSize = 18 * 7;
 const amountOfDaysToFill = minimumSummaryDatesSize - datesFromYearStart.length
 
-type SummaryProps = {
+type SummaryProps = Array <{
     id: string;
     date: string;
     amount: number;
     completed: number;
-}[]
+}>
 
 export function Home(){
     const [loading, setLoading] = useState(true);
@@ -36,16 +36,16 @@ export function Home(){
             
             setSummary(response.data);
         }catch (error) {
-            Alert.alert('Ops', 'Não foi possivel carregar o sumário de hábistos.');
+            Alert.alert('Ops', 'Não foi possivel carregar o sumário de hábitos.');
             console.log(error);
         }finally{
             setLoading(false);
         }
     }
 
-    useEffect(() => {
+    useFocusEffect(useCallback(() => {
         fetchData();
-    }, []);
+    }, []));
 
     if (loading){
         return (
