@@ -1,16 +1,16 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs'
 
-export function generateDatesFromYearBeginning() {
-    
-    const firstDayOftheYear = dayjs().startOf('year')
-    const today = new Date()
+export function generateDatesFromCurrentMonth() {
+  const firstDayOfMonth = dayjs().startOf('month')
+  const lastDayOfMonth = dayjs().endOf('month')
 
-    const dates = []
-    let compareDate = firstDayOftheYear
+  const dates = []
+  let currentDate = firstDayOfMonth
 
-    while(compareDate.isBefore(today)) {
-        dates.push(compareDate.toDate()) 
-        compareDate = compareDate.add(1, 'day')
-    }
-    return dates
+  while (currentDate.isBefore(lastDayOfMonth) || currentDate.isSame(lastDayOfMonth, 'day')) {
+    dates.push(currentDate.toDate())
+    currentDate = currentDate.add(1, 'day')
+  }
+
+  return dates
 }
