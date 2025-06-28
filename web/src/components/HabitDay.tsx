@@ -29,19 +29,21 @@ export function HabitDay({ defaultCompleted = 0, amount = 0, date }: HabitDayPro
 
   return (
     <Popover.Root>
-      <Popover.Trigger
-        className={clsx(
-          "w-10 h-10 bg-zinc-900 border-2 border-zinc-800 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2 focus:ring-offset-background",
-          {
-            'bg-zinc-900 border-zinc-800': completedPercentage === 0,
-            'bg-violet-900 border-violet-500': completedPercentage > 0 && completedPercentage < 20,
-            'bg-violet-800 border-violet-500': completedPercentage >= 20 && completedPercentage < 40,
-            'bg-violet-700 border-violet-500': completedPercentage >= 40 && completedPercentage < 60,
-            'bg-violet-600 border-violet-500': completedPercentage >= 60 && completedPercentage < 80,
-            'bg-violet-500 border-violet-400': completedPercentage >= 80,
-          }
-        )}
-      />
+      <Popover.Trigger className="relative w-10 h-10 rounded-full focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2 focus:ring-offset-background group">
+        <div
+          className="absolute inset-0 rounded-full p-[2px] bg-[conic-gradient(var(--progress-color)_0%,transparent_0%)] transition-all duration-500"
+          style={{
+            '--progress-color': '#7c3aed',
+            backgroundImage: `conic-gradient(#7c3aed ${completedPercentage}%, transparent ${completedPercentage}%)`,
+          } as React.CSSProperties}
+        >
+          <div className="w-full h-full bg-zinc-900 rounded-full flex items-center justify-center">
+            <span className="text-sm text-white font-bold">
+              {dayjs(date).format('D')}
+            </span>
+          </div>
+        </div>
+      </Popover.Trigger>
 
       <Popover.Portal>
         <Popover.Content className="min-w-[320px] p-6 rounded-2xl bg-zinc-900 flex flex-col">

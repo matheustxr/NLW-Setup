@@ -24,13 +24,14 @@ export function HabitsList({ date, onCompletedChanged }: HabitLisProps) {
 
   useEffect(() => {
     api.get('day', {
-      params:{
+      params: {
         date: date.toISOString()
       }
     }).then(response => {
       setHabitsInfo(response.data)
+      onCompletedChanged(response.data.completedHabits.length) // <-- AQUI!
     })
-  },[])
+  }, [date])
 
   async function handleToggleHabit(habitId: string) {
     const isHabitAlreadyCompleted = habitsInfo!.completedHabits.includes(habitId)
